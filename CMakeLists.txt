@@ -22,4 +22,5 @@ add_compile_options(-Wall
 
 # Sources Here
 add_subdirectory(libraries)
+add_subdirectory(examples)
 add_subdirectory(projects)
