@@ -6,6 +6,9 @@
 #include "hardware/gpio.h"
 #include "hardware/uart.h"
 
+// Modified snippet of Dave Akerman (daveake)'s HAB Tracker
+// https://github.com/daveake/pico-tracker
+
 typedef struct GPS
 {
     // Timing

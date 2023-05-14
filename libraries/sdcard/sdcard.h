@@ -7,6 +7,9 @@
 
 #include <stdarg.h>
 
+// Wrapper for Carl J Kugler III (carlk3)'s SD Card Library
+// https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico
+
 typedef struct
 {
     bool mounted;
