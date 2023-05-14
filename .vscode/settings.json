@@ -19,6 +19,8 @@
     "cmake.buildBeforeRun": true,
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
-        "hw_config.h": "c"
+        "hw_config.h": "c",
+        "gps.h": "c",
+        "uart.h": "c"
     }
 }
