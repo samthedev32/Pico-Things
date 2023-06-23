@@ -1,6 +1,6 @@
 add_executable(example_gps main.c)
 
-target_link_libraries(example_gps pico_stdlib gps)
+target_link_libraries(example_gps pico_stdlib pico_gps)
 
 pico_enable_stdio_usb(example_gps 1)
 pico_enable_stdio_uart(example_gps 0)
