@@ -6,13 +6,13 @@
 int main() {
   stepper motor;
 
-  // Set Pins 2, 3, 4, 5
+  // Set Pins(2..5)
   for (int i = 0; i < 4; i++)
     motor.pin[i] = 2 + i;
 
   stepper_init(&motor);
 
   while (true) {
-    stepper_step_half(&motor, 1, 800);
+    stepper_step(&motor, 1, 1);
   }
 }

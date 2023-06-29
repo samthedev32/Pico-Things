@@ -59,7 +59,7 @@ void stepper_step(stepper *motor, int steps, int speed) {
     stepper_set(motor, motor->position == 0, motor->position == 1,
                 motor->position == 2, motor->position == 3);
 
-    sleep_us(speed);
+    sleep_ms(speed);
   }
 }
 
@@ -89,6 +89,6 @@ void stepper_step_half(stepper *motor, int steps, int speed) {
     int pos = motor->position / 2;
     stepper_set(motor, pos == 0, pos == 1, pos == 2, pos == 3);
 
-    sleep_us(speed);
+    sleep_ms(speed);
   }
 }

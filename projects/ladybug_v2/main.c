@@ -31,16 +31,60 @@ int main() {
 
   adc_gpio_init(26); // left
   adc_gpio_init(27); // right
+  adc_gpio_init(28); // top
+
+  uint8_t state = 0;
 
   // Main Loop
   while (true) {
-    stepper_step(&left, 1, 1);
-    stepper_step(&right, 1, -1);
+    switch (state) {
+      // Reset State
+    default:
+      state = 0;
+      break;
 
-    // read light
-    adc_select_input(0);
-    float left = adc_read() * ADC_CONVERSION;
-    adc_select_input(1);
-    float right = adc_read() * ADC_CONVERSION;
+    // Follow Light
+    case 0: {
+      // Read Light Values
+      adc_select_input(0);
+      float l = adc_read() * ADC_CONVERSION;
+      adc_select_input(1);
+      float r = adc_read() * ADC_CONVERSION;
+
+      adc_select_input(2);
+      float t = adc_read() * ADC_CONVERSION;
+
+      l = l * (l > t);
+      r = r * (r > t);
+
+      if (l < r) {
+        // Turn Right
+        stepper_step(&left, 1, 0);
+        stepper_step(&right, 0, 0);
+      } else if (l > r) {
+        // Turn Left
+        stepper_step(&left, 0, 0);
+        stepper_step(&right, 1, 0);
+      } else {
+        // Move Forward
+        stepper_step(&left, 1, 0);
+        stepper_step(&right, 1, 0);
+      }
+
+      sleep_ms(10);
+    } break;
+
+      // TODO
+    case 1: {
+      if (bluetooth_available(&bt)) {
+        char str[512];
+        bluetooth_receive(&bt, str, 512);
+      }
+
+      // Step With Motors
+      stepper_step(&left, 1, 1);
+      stepper_step(&right, 1, -1);
+    } break;
+    }
   }
 }
