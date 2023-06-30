@@ -13,6 +13,8 @@ typedef struct {
 
   // Step Status
   uint8_t position;
+
+  bool reversed;
 } stepper;
 
 // Initialize Stepper
@@ -61,6 +63,9 @@ void stepper_step(stepper *motor, int steps, int speed) {
 
     sleep_ms(speed);
   }
+
+  if (steps == 0)
+    stepper_set(motor, 0, 0, 0, 0);
 }
 
 // Do a Half Step

@@ -1,30 +1,14 @@
-#include "hardware/timer.h"
-#include "pico/time.h"
 #include <hardware/adc.h>
+#include <hardware/timer.h>
 #include <pico/stdlib.h>
+#include <pico/time.h>
+#include <stdint.h>
 
 #include <bluetooth.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stepper.h>
 #include <string.h>
-
-#define ADC_VREF 3.3f
-#define ADC_CONVERSION ADC_VREF / (1 << 12)
-
-void wait_for(bluetooth *bt, const char *message) {
-  char *data = NULL;
-
-  while (strcmp(message, data)) {
-    if (bluetooth_available(bt)) {
-      free(data);
-      bluetooth_receive(bt, &data);
-    } else
-      sleep_ms(5);
-  }
-
-  free(data);
-}
 
 int main() {
   // Init Motors
@@ -57,84 +41,90 @@ int main() {
 
   uint8_t state = 0;
 
-  // Wait for Start
-  wait_for(&bt, "start");
+  while (true) {
+    for (int i = 0; i < 20; i++) {
+      stepper_step(&left, -1, 0);
+      stepper_step(&right, -1, 0);
+      sleep_ms(2);
+    }
 
-  for (int i = 0; i < 2000; i++) {
-    stepper_step(&left, 1, 0);
-    stepper_step(&right, 1, 0);
-    sleep_ms(2);
+    for (int i = 0; i < 20; i++) {
+      stepper_step(&right, 1, 0);
+      stepper_step(&left, 1, 0);
+      sleep_ms(2);
+    }
   }
-
-  // Wait for Dance
-  wait_for(&bt, "dance");
-
-  stepper_set(&left, 0, 0, 0, 0);
-  stepper_set(&right, 0, 0, 0, 0);
-
-  // Wait for End
-  wait_for(&bt, "end");
-
-  while (1)
-    ;
 
   // Main Loop
   while (true) {
     // current time in ms
     uint32_t now = time_us_32() / 1000;
 
+    // Get State
+    if (bluetooth_available(&bt)) {
+      char *data = NULL;
+      bluetooth_receive(&bt, &data);
+
+      if (!strcmp(data, "start"))
+        state = 1;
+      else if (!strcmp(data, "dance"))
+        state = 2;
+      else if (!strcmp(data, "end"))
+        state = 0;
+      else
+        ;
+
+      free(data);
+    }
+
     switch (state) {
       // Reset State
     default:
+    case 0:
       state = 0;
       break;
 
     // Follow Light
-    case 0: {
+    case 1: {
       // Read Light Values
-      adc_select_input(0);
-      float l = adc_read() * ADC_CONVERSION;
-      adc_select_input(1);
-      float r = adc_read() * ADC_CONVERSION;
-
       adc_select_input(2);
-      float t = adc_read() * ADC_CONVERSION;
+      uint16_t l = adc_read();
+      adc_select_input(0);
+      uint16_t r = adc_read();
 
-      l = l * (l > t);
-      r = r * (r > t);
+      adc_select_input(1);
+      uint16_t f = adc_read();
 
-      if (l < r) {
-        // Turn Right
-        stepper_step(&left, 1, 0);
-        stepper_step(&right, 0, 0);
-      } else if (l > r) {
-        // Turn Left
-        stepper_step(&left, 0, 0);
-        stepper_step(&right, 1, 0);
+      uint16_t side = r;
+      if (r < l)
+        side = l;
+
+      const uint16_t treshold = 4096 / 800;
+      if (side > f + treshold && l != r) {
+        if (l < r) {
+          // Turn Right
+          stepper_step(&left, -1, 0);
+          stepper_step(&right, -1, 0);
+        } else {
+          // Turn Left
+          stepper_step(&left, 1, 0);
+          stepper_step(&right, 1, 0);
+        }
       } else {
         // Move Forward
-        stepper_step(&left, 1, 0);
+        stepper_step(&left, -1, 0);
         stepper_step(&right, 1, 0);
       }
-
-      sleep_ms(10);
     } break;
 
-    // TODO
-    case 1: {
-      //   uint8_t *received_data = NULL;
-      //   size_t received_len = 0;
-      //   // bluetooth_receive(&bt, &received_data, &received_len);
-
-      //   if (received_data != NULL) {
-      //     printf("Received data: %.*s\n", (int)received_len, received_data);
-      //     free(received_data);
-      //   }
-
-      // Step With Motors
-      stepper_step(&left, 1, 1);
-      stepper_step(&right, 1, -1);
+    // Dance
+    case 2: {
+      // Rotate
+      stepper_step(&left, 1, 0);
+      stepper_step(&right, 1, 0);
     } break;
     }
+
+    sleep_ms(2);
   }
 }
