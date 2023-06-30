@@ -1,11 +1,30 @@
+#include "hardware/timer.h"
+#include "pico/time.h"
 #include <hardware/adc.h>
 #include <pico/stdlib.h>
 
 #include <bluetooth.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stepper.h>
+#include <string.h>
 
 #define ADC_VREF 3.3f
 #define ADC_CONVERSION ADC_VREF / (1 << 12)
+
+void wait_for(bluetooth *bt, const char *message) {
+  char *data = NULL;
+
+  while (strcmp(message, data)) {
+    if (bluetooth_available(bt)) {
+      free(data);
+      bluetooth_receive(bt, &data);
+    } else
+      sleep_ms(5);
+  }
+
+  free(data);
+}
 
 int main() {
   // Init Motors
@@ -24,6 +43,9 @@ int main() {
 
   // Init Bluetooth
   bluetooth bt;
+  bt.TX = 0;
+  bt.RX = 1;
+  bt.uart = uart0;
   bluetooth_init(&bt);
 
   // Init Light Sensors
@@ -35,8 +57,24 @@ int main() {
 
   uint8_t state = 0;
 
+  // while (true) {
+  //   stepper_step(&left, int steps, int speed);
+  // }
+
+  // Wait for Start
+  wait_for(&bt, "start");
+
+  // Wait for Dance
+  wait_for(&bt, "dance");
+
+  // Wait for End
+  wait_for(&bt, "end");
+
   // Main Loop
   while (true) {
+    // current time in ms
+    uint32_t now = time_us_32() / 1000;
+
     switch (state) {
       // Reset State
     default:
@@ -74,12 +112,16 @@ int main() {
       sleep_ms(10);
     } break;
 
-      // TODO
+    // TODO
     case 1: {
-      if (bluetooth_available(&bt)) {
-        char str[512];
-        bluetooth_receive(&bt, str, 512);
-      }
+      //   uint8_t *received_data = NULL;
+      //   size_t received_len = 0;
+      //   // bluetooth_receive(&bt, &received_data, &received_len);
+
+      //   if (received_data != NULL) {
+      //     printf("Received data: %.*s\n", (int)received_len, received_data);
+      //     free(received_data);
+      //   }
 
       // Step With Motors
       stepper_step(&left, 1, 1);

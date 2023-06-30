@@ -13,6 +13,6 @@ int main() {
   stepper_init(&motor);
 
   while (true) {
-    stepper_step(&motor, 1, 1);
+    stepper_step(&motor, 1, 2);
   }
 }

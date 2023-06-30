@@ -4,6 +4,7 @@
 #include <pico/stdlib.h>
 #include <pico/time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct {
@@ -22,17 +23,38 @@ void bluetooth_init(bluetooth *bt) {
   uart_init(bt->uart, 9600);
   gpio_set_function(bt->TX, GPIO_FUNC_UART);
   gpio_set_function(bt->RX, GPIO_FUNC_UART);
+  uart_set_format(bt->uart, 8, 1, UART_PARITY_NONE);
 }
 
 // Receive Bluetooth Command/Message
-void bluetooth_receive(bluetooth *bt, char **str, int length) {
-  int i = 0;
-  char c;
-  while ((c = uart_getc(bt->uart)) != '\0') {
-    *str[i] = c;
-    c++;
-    if (c >= length)
+void bluetooth_receive(bluetooth *bt, char **data) {
+  size_t buffer_size = 32;
+  size_t len = 0;
+
+  *data = (char *)malloc(buffer_size);
+
+  while (uart_is_readable(bt->uart)) {
+    char c = uart_getc(bt->uart);
+
+    // Exit if (msg == '\0')
+    if (c == '\0') {
+      (*data)[len] = c;
       break;
+    }
+
+    // Add Character
+    (*data)[len] = c;
+    (*data)[len + 1] = '\0';
+    len++;
+
+    // Expand Buffer (if needed)
+    if (len + 1 >= buffer_size) {
+      buffer_size += 32;
+      *data = (char *)realloc(*data, buffer_size);
+    }
+
+    // Sleep, so the BT Module can catch up
+    sleep_ms(5);
   }
 }
 

@@ -18,15 +18,15 @@ int main() {
 
   bluetooth_init(&bt);
 
-  gpio_init(PICO_DEFAULT_LED_PIN);
-  gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-
   while (1) {
-    char msg[1024];
-    bluetooth_receive(&bt, &msg, 1024);
-    printf("%s\n", msg);
+    if (bluetooth_available(&bt)) {
+      char *received_data = NULL;
 
-    bluetooth_send(&bt, "hi");
-    sleep_ms(500);
+      bluetooth_receive(&bt, &received_data);
+      if (received_data != NULL) {
+        printf("Received data: %s\n", received_data);
+        free(received_data);
+      }
+    }
   }
 }
