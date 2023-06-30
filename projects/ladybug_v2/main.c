@@ -31,8 +31,8 @@ int main() {
   stepper left, right;
 
   for (int i = 0; i < 4; i++) {
-    left.pin[i] = i + 0;
-    right.pin[i] = i + 4;
+    left.pin[i] = 2 + i;
+    right.pin[i] = 6 + i;
   }
 
   stepper_init(&left);
@@ -57,18 +57,26 @@ int main() {
 
   uint8_t state = 0;
 
-  // while (true) {
-  //   stepper_step(&left, int steps, int speed);
-  // }
-
   // Wait for Start
   wait_for(&bt, "start");
+
+  for (int i = 0; i < 2000; i++) {
+    stepper_step(&left, 1, 0);
+    stepper_step(&right, 1, 0);
+    sleep_ms(2);
+  }
 
   // Wait for Dance
   wait_for(&bt, "dance");
 
+  stepper_set(&left, 0, 0, 0, 0);
+  stepper_set(&right, 0, 0, 0, 0);
+
   // Wait for End
   wait_for(&bt, "end");
+
+  while (1)
+    ;
 
   // Main Loop
   while (true) {
