@@ -10,6 +10,8 @@
 #include <stepper.h>
 #include <string.h>
 
+extern void dance(stepper *left, stepper *right);
+
 int main() {
   // Init Motors
   stepper left, right;
@@ -39,23 +41,8 @@ int main() {
   adc_gpio_init(27); // right
   adc_gpio_init(28); // top
 
-  uint8_t state = 0;
-
-  while (true) {
-    for (int i = 0; i < 20; i++) {
-      stepper_step(&left, -1, 0);
-      stepper_step(&right, -1, 0);
-      sleep_ms(2);
-    }
-
-    for (int i = 0; i < 20; i++) {
-      stepper_step(&right, 1, 0);
-      stepper_step(&left, 1, 0);
-      sleep_ms(2);
-    }
-  }
-
   // Main Loop
+  uint8_t state = 0;
   while (true) {
     // current time in ms
     uint32_t now = time_us_32() / 1000;
@@ -99,32 +86,162 @@ int main() {
       if (r < l)
         side = l;
 
-      const uint16_t treshold = 4096 / 800;
+      const uint16_t treshold = 4096 / 100;
       if (side > f + treshold && l != r) {
         if (l < r) {
           // Turn Right
-          stepper_step(&left, -1, 0);
+          stepper_step(&left, 1, 0);
           stepper_step(&right, -1, 0);
         } else {
           // Turn Left
-          stepper_step(&left, 1, 0);
+          stepper_step(&left, -1, 0);
           stepper_step(&right, 1, 0);
         }
       } else {
         // Move Forward
-        stepper_step(&left, -1, 0);
+        stepper_step(&left, 1, 0);
         stepper_step(&right, 1, 0);
       }
     } break;
 
     // Dance
     case 2: {
-      // Rotate
-      stepper_step(&left, 1, 0);
-      stepper_step(&right, 1, 0);
+      dance(&left, &right);
+      state = 0;
     } break;
     }
 
     sleep_ms(2);
   }
+}
+
+// Dance Program
+void dance(stepper *left, stepper *right) {
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+  // balra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+  // jobbra kor
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // hatra
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // balra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // jobbra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // hatra
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // balra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // jobbra kor
+
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // hatra
+
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // balra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // jobbra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // hatra
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // balra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // jobbra kor
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // hatra
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // balra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // jobbra kor
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+
+  // hatra
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+
+  // elore
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
 }
