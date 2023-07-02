@@ -146,8 +146,8 @@ void move(stepper *lr[2], int dir, int time) {
     break;
   }
   for (int i = 0; i < time / 2; i++) {
-    stepper_step(lr[0], , 0);
-    stepper_step(lr[1], 1, 0);
+    stepper_step(lr[0], l, 0);
+    stepper_step(lr[1], r, 0);
     sleep_ms(2);
   }
 }
