@@ -10,7 +10,7 @@
 #include <stepper.h>
 #include <string.h>
 
-extern void dance(stepper *left, stepper *right);
+void dance(stepper *left, stepper *right);
 
 int main() {
   // Init Motors
