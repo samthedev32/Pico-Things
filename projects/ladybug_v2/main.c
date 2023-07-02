@@ -67,7 +67,6 @@ int main() {
     switch (state) {
       // Reset State
     default:
-    case 0:
       state = 0;
       break;
 
@@ -115,7 +114,7 @@ int main() {
   }
 }
 
-// Dance Program
+// Allons-y Danse
 void dance(stepper *left, stepper *right) {
   stepper_step(left, 1, 0);
   stepper_step(right, 1, 0);
