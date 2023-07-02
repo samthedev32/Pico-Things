@@ -114,135 +114,66 @@ int main() {
   }
 }
 
+void move(stepper *lr[2], int dir, int time) {
+  const int STOP = 0;
+  const int FORWARD = 1;
+  const int BACKWARD = 2;
+  const int RIGHT = 3;
+  const int LEFT = 4;
+
+  int l = 0, r = 0;
+
+  switch (dir) {
+  default:
+  case STOP:
+    l = 0, r = 0;
+    break;
+
+  case FORWARD:
+    l = 1, r = 1;
+    break;
+
+  case BACKWARD:
+    l = -1, r = -1;
+    break;
+
+  case RIGHT:
+    l = 1, r = -1;
+    break;
+
+  case LEFT:
+    l = -1, r = 1;
+    break;
+  }
+  for (int i = 0; i < time / 2; i++) {
+    stepper_step(lr[0], , 0);
+    stepper_step(lr[1], 1, 0);
+    sleep_ms(2);
+  }
+}
+
 // Allons-y Danse
 void dance(stepper *left, stepper *right) {
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
+  stepper *lr[2] = {left, right};
 
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
+  // const int STOP = 0;
+  const int FORWARD = 1;
+  const int BACKWARD = 2;
+  const int RIGHT = 3;
+  const int LEFT = 4;
 
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // jobbra kor
+  for (int i = 0; i < 4; i++) {
+    move(lr, FORWARD, 1000);
+    move(lr, LEFT, 1000);
+    move(lr, RIGHT, 1000);
+    move(lr, BACKWARD, 1000);
 
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // hatra
+    move(lr, LEFT, 1000);
+    move(lr, RIGHT, 1000);
+    move(lr, FORWARD, 1000);
+    move(lr, BACKWARD, 1000);
+  }
 
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // jobbra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // hatra
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // jobbra kor
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // hatra
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // jobbra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // hatra
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // jobbra kor
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // hatra
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // jobbra kor
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-  // hatra
-
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // elore
-
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-  // balra kor
+  move(lr, FORWARD, 1000);
+  move(lr, LEFT, 1000);
 }
