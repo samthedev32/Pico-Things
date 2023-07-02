@@ -121,127 +121,129 @@ void dance(stepper *left, stepper *right) {
   stepper_step(right, 1, 0);
   sleep_ms(1000);
   // elore
+
   stepper_step(left, -1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
   // balra kor
+
   stepper_step(left, 1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-  // jobbra kor
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-
-  // hatra
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-
-  // balra kor
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-
-  // jobbra kor
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-
-  // elore
-  stepper_step(left, -1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-
-  // hatra
-  stepper_step(left, 1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-
-  // elore
-  stepper_step(left, -1, 0);
-  stepper_step(right, 1, 0);
-  sleep_ms(1000);
-
-  // balra kor
-  stepper_step(left, 1, 0);
-  stepper_step(right, -1, 0);
-  sleep_ms(1000);
-
   // jobbra kor
 
   stepper_step(left, -1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // hatra
 
   stepper_step(left, -1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // balra kor
+
   stepper_step(left, 1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // jobbra kor
+
   stepper_step(left, 1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // elore
+
   stepper_step(left, -1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // hatra
+
   stepper_step(left, 1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // elore
+
   stepper_step(left, -1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // balra kor
+
   stepper_step(left, 1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // jobbra kor
+
   stepper_step(left, -1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // hatra
+
   stepper_step(left, -1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // balra kor
+
   stepper_step(left, 1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // jobbra kor
+
   stepper_step(left, 1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // elore
+
   stepper_step(left, -1, 0);
   stepper_step(right, -1, 0);
   sleep_ms(1000);
-
   // hatra
+
   stepper_step(left, 1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
-
   // elore
+
   stepper_step(left, -1, 0);
   stepper_step(right, 1, 0);
   sleep_ms(1000);
+  // balra kor
+
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+  // jobbra kor
+
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+  // hatra
+
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+  // balra kor
+
+  stepper_step(left, 1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+  // jobbra kor
+
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+  // elore
+
+  stepper_step(left, -1, 0);
+  stepper_step(right, -1, 0);
+  sleep_ms(1000);
+  // hatra
+
+  stepper_step(left, 1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+  // elore
+
+  stepper_step(left, -1, 0);
+  stepper_step(right, 1, 0);
+  sleep_ms(1000);
+  // balra kor
 }
