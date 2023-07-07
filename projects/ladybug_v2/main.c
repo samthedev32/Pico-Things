@@ -1,9 +1,11 @@
+#include "hardware/gpio.h"
 #include <hardware/adc.h>
 #include <hardware/timer.h>
 #include <pico/stdlib.h>
 #include <pico/time.h>
 #include <stdint.h>
 
+#include "pico/multicore.h"
 #include <bluetooth.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,8 +13,19 @@
 #include <string.h>
 
 void dance(stepper *left, stepper *right);
+void blinking();
+
+#define EYE_OFF 0 // both eyes off
+#define EYE_ON 1  // both eyes on
+
+#define EYE_BLINK_SLOW 2 // slow blink
+#define EYE_BLINK_FAST 3 // fast blink
 
 int main() {
+  multicore_launch_core1(blinking);
+
+  multicore_fifo_push_blocking(EYE_OFF);
+
   // Init Motors
   stepper left, right;
 
@@ -40,6 +53,8 @@ int main() {
   adc_gpio_init(26); // left
   adc_gpio_init(27); // right
   adc_gpio_init(28); // top
+
+  multicore_fifo_push_blocking(EYE_BLINK_SLOW);
 
   // Main Loop
   uint8_t state = 0;
@@ -85,7 +100,7 @@ int main() {
       if (r < l)
         side = l;
 
-      const uint16_t treshold = 4096 / 100;
+      const uint16_t treshold = 4096 / 400;
       if (side > f + treshold && l != r) {
         if (l < r) {
           // Turn Right
@@ -176,4 +191,65 @@ void dance(stepper *left, stepper *right) {
 
   move(lr, FORWARD, 1000);
   move(lr, LEFT, 1000);
+}
+
+// Eye  Blinking
+void blinking() {
+  gpio_init(10);
+  gpio_init(11);
+
+  gpio_set_dir(10, GPIO_OUT);
+  gpio_set_dir(11, GPIO_OUT);
+
+  unsigned int state = EYE_OFF;
+
+  while (true) {
+    if (multicore_fifo_rvalid())
+      state = multicore_fifo_pop_blocking();
+
+    switch (state) {
+    default:
+    case EYE_OFF:
+      gpio_put(10, 0);
+      gpio_put(11, 0);
+      sleep_ms(100);
+      break;
+
+    case EYE_ON:
+      gpio_put(10, 1);
+      gpio_put(11, 1);
+      sleep_ms(100);
+      break;
+
+    case EYE_BLINK_SLOW:
+      gpio_put(10, 1);
+      gpio_put(11, 1);
+      sleep_ms(1500);
+
+      gpio_put(10, 0);
+      sleep_ms(50);
+      gpio_put(11, 0);
+      sleep_ms(100);
+      break;
+
+    case EYE_BLINK_FAST:
+      gpio_put(10, 1);
+      gpio_put(11, 1);
+      sleep_ms(100);
+
+      gpio_put(10, 0);
+      gpio_put(11, 0);
+      sleep_ms(100);
+      break;
+    }
+    gpio_put(10, 1);
+    gpio_put(11, 1);
+
+    sleep_ms(1000);
+
+    gpio_put(10, 0);
+    gpio_put(11, 0);
+
+    sleep_ms(100);
+  }
 }
