@@ -12,11 +12,11 @@ int main() {
     right.pin[i] = 6 + i;
   }
 
-  stepper_init(&left);
-  stepper_init(&right);
+  stepper_attach(&left);
+  stepper_attach(&right);
 
-  stepper_set(&left, 0, 0, 0, 0);
-  stepper_set(&right, 0, 0, 0, 0);
+  stepper_lock(left);
+  stepper_lock(right);
 
   // Init Light Sensors
   adc_init();
@@ -77,30 +77,30 @@ int main() {
       if (side > f + treshold && l != r) {
         if (l > r) {
           // Turn Right
-          stepper_step(&left, 1, 0);
-          stepper_step(&right, -1, 0);
+          stepper_step(&left, 1);
+          stepper_step(&right, -1);
         } else {
           // Turn Left
-          stepper_step(&left, -1, 0);
-          stepper_step(&right, 1, 0);
+          stepper_step(&left, -1);
+          stepper_step(&right, 1);
         }
       } else {
         // Move Forward
-        stepper_step(&left, 1, 0);
-        stepper_step(&right, 1, 0);
+        stepper_step(&left, 1);
+        stepper_step(&right, 1);
       }
     } break;
 
     case 2: {
       for (int i = 0; i < 20; i++) {
-        stepper_step(&left, -1, 0);
-        stepper_step(&right, -1, 0);
+        stepper_step(&left, -1);
+        stepper_step(&right, -1);
         sleep_ms(2);
       }
 
       for (int i = 0; i < 20; i++) {
-        stepper_step(&right, 1, 0);
-        stepper_step(&left, 1, 0);
+        stepper_step(&right, 1);
+        stepper_step(&left, 1);
         sleep_ms(2);
       }
     } break;

@@ -1,9 +1,9 @@
-add_subdirectory(gps)
-add_subdirectory(sdcard)
-
-add_subdirectory(bluetooth)
-
-add_subdirectory(stepper)
-add_subdirectory(l293d)
-
+add_subdirectory(audio)
 add_subdirectory(C)
+add_subdirectory(calendar)
+add_subdirectory(display)
+add_subdirectory(gps)
+add_subdirectory(keypad)
+add_subdirectory(motor)
+add_subdirectory(radio)
+add_subdirectory(sd)

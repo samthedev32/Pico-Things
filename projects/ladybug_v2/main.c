@@ -34,11 +34,11 @@ int main() {
     right.pin[i] = 6 + i;
   }
 
-  stepper_init(&left);
-  stepper_init(&right);
+  stepper_attach(&left);
+  stepper_attach(&right);
 
-  stepper_set(&left, 0, 0, 0, 0);
-  stepper_set(&right, 0, 0, 0, 0);
+  stepper_set(left, 0, 0, 0, 0);
+  stepper_set(right, 0, 0, 0, 0);
 
   // Init Bluetooth
   bluetooth bt;
@@ -104,17 +104,17 @@ int main() {
       if (side > f + treshold && l != r) {
         if (l < r) {
           // Turn Right
-          stepper_step(&left, 1, 0);
-          stepper_step(&right, -1, 0);
+          stepper_step(&left, 1);
+          stepper_step(&right, -1);
         } else {
           // Turn Left
-          stepper_step(&left, -1, 0);
-          stepper_step(&right, 1, 0);
+          stepper_step(&left, -1);
+          stepper_step(&right, 1);
         }
       } else {
         // Move Forward
-        stepper_step(&left, 1, 0);
-        stepper_step(&right, 1, 0);
+        stepper_step(&left, 1);
+        stepper_step(&right, 1);
       }
     } break;
 
@@ -161,8 +161,8 @@ void move(stepper *lr[2], int dir, int time) {
     break;
   }
   for (int i = 0; i < time / 2; i++) {
-    stepper_step(lr[0], l, 0);
-    stepper_step(lr[1], r, 0);
+    stepper_step(lr[0], l);
+    stepper_step(lr[1], r);
     sleep_ms(2);
   }
 }
@@ -172,10 +172,10 @@ void dance(stepper *left, stepper *right) {
   stepper *lr[2] = {left, right};
 
   // const int STOP = 0;
-  const int FORWARD = 1;
-  const int BACKWARD = 2;
-  const int RIGHT = 3;
-  const int LEFT = 4;
+  const unsigned int FORWARD = 1;
+  const unsigned int BACKWARD = 2;
+  const unsigned int RIGHT = 3;
+  const unsigned int LEFT = 4;
 
   for (int i = 0; i < 4; i++) {
     move(lr, FORWARD, 1000);

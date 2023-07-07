@@ -1,0 +1,5 @@
+add_executable(speech_example main.c)
+
+target_link_libraries(speech_example pico_stdio pico_speech)
+
+pico_add_extra_outputs(speech_example)

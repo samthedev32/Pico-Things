@@ -1,0 +1,5 @@
+add_executable(keypad_example main.c)
+
+target_link_libraries(keypad_example pico_stdio pico_keypad)
+
+pico_add_extra_outputs(keypad_example)

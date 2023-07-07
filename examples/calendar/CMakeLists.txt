@@ -1,0 +1,5 @@
+add_executable(calendar_example main.c)
+
+target_link_libraries(calendar_example pico_stdio pico_calendar)
+
+pico_add_extra_outputs(calendar_example)

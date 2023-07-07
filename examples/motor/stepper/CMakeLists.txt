@@ -1,0 +1,5 @@
+add_executable(stepper_example main.c)
+
+target_link_libraries(stepper_example pico_stdio pico_stepper)
+
+pico_add_extra_outputs(stepper_example)
