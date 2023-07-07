@@ -160,6 +160,7 @@ void move(stepper *lr[2], int dir, int time) {
     l = -1, r = 1;
     break;
   }
+
   for (int i = 0; i < time / 2; i++) {
     stepper_step(lr[0], l);
     stepper_step(lr[1], r);
