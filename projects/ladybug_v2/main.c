@@ -54,6 +54,10 @@ int main() {
   adc_gpio_init(27); // right
   adc_gpio_init(28); // top
 
+  gpio_set_pulls(26, 1, 0);
+  gpio_set_pulls(27, 1, 0);
+  gpio_set_pulls(28, 1, 0);
+
   multicore_fifo_push_blocking(EYE_BLINK_SLOW);
 
   // Main Loop
@@ -178,7 +182,7 @@ void dance(stepper *left, stepper *right) {
   const unsigned int RIGHT = 3;
   const unsigned int LEFT = 4;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 2; i++) {
     move(lr, FORWARD, 1000);
     move(lr, LEFT, 1000);
     move(lr, RIGHT, 1000);
@@ -189,6 +193,11 @@ void dance(stepper *left, stepper *right) {
     move(lr, FORWARD, 1000);
     move(lr, BACKWARD, 1000);
   }
+
+  move(lr, FORWARD, 1000);
+  move(lr, LEFT, 1000);
+  move(lr, RIGHT, 1000);
+  move(lr, BACKWARD, 1000);
 
   move(lr, FORWARD, 1000);
   move(lr, LEFT, 1000);
