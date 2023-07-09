@@ -1,16 +1,16 @@
-#include "hardware/gpio.h"
 #include <hardware/adc.h>
+#include <hardware/gpio.h>
 #include <hardware/timer.h>
+#include <pico/multicore.h>
 #include <pico/stdlib.h>
 #include <pico/time.h>
 #include <stdint.h>
-
-#include "pico/multicore.h"
-#include <bluetooth.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stepper.h>
 #include <string.h>
+
+#include <bluetooth.h>
+#include <stepper.h>
 
 void dance(stepper *left, stepper *right);
 void blinking();
@@ -47,17 +47,18 @@ int main() {
   bt.uart = uart0;
   bluetooth_init(&bt);
 
-  // Init Light Sensors
+  // Init Analog-Digital Converter
   adc_init();
 
-  adc_gpio_init(26); // left
-  adc_gpio_init(27); // right
-  adc_gpio_init(28); // top
+  adc_gpio_init(26);
+  adc_gpio_init(27);
+  adc_gpio_init(28);
 
   gpio_set_pulls(26, 1, 0);
   gpio_set_pulls(27, 1, 0);
   gpio_set_pulls(28, 1, 0);
 
+  // Start to Blink
   multicore_fifo_push_blocking(EYE_BLINK_SLOW);
 
   // Main Loop
