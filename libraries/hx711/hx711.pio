@@ -1,0 +1,154 @@
+.program hx711
+
+wait 0 pin 1
+wait 1 pin 1
+in pins, 1
+
+loop:
+    pull
+    out pins, 1
+    jmp loop
+
+CLR ADSK //AD Enable（PD_SCK set low）
+SETB ADDO //Enable 51CPU I/0
+JB ADDO,$ //AD conversion completed?
+MOV R4,#24
+
+ShiftOut:
+SETB ADSK //PD_SCK set high（positive pulse）
+NOP
+CLR ADSK //PD_SCK set low
+MOV C,ADDO //read on bit
+XCH A,R7 //move data
+RLC A
+XCH A,R7
+XCH A,R6
+RLC A
+XCH A,R6
+XCH A,R5
+RLC A
+XCH A,R5
+DJNZ R4,ShiftOut //moved 24BIT?
+SETB ADSK
+NOP
+CLR ADSK
+RET
+
+% c-sdk {
+static inline void hx711_init(PIO pio, uint sm, uint offset, uint do, uint sck) {
+    pio_sm_config c = hx711_program_get_default_config(offset);
+
+    sm_config_set_out_pins(&c, do, 1);
+    pio_gpio_init(pio, do);
+    pio_sm_set_consecutive_pindirs(pio, sm, do, 1, true);
+
+    sm_config_set_in_pins(&c, sck, 1);
+    pio_gpio_init(pio, sck);
+    pio_sm_set_consecutive_pindirs(pio, sm, sck, 1, false);
+
+    // Load our configuration, and jump to the start of the program
+    pio_sm_init(pio, sm, offset, &c);
+
+    // Set the state machine running
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
+
+.wrap_target
+CLR ADSK //AD Enable（PD_SCK set low）
+SETB ADDO //Enable 51CPU I/0
+JB ADDO,$ //AD conversion completed?
+MOV R4,#24
+ShiftOut:
+SETB ADSK //PD_SCK set high（positive pulse）
+NOP
+CLR ADSK //PD_SCK set low
+MOV C,ADDO //read on bit
+XCH A,R7 //move data
+RLC A
+XCH A,R7
+XCH A,R6
+RLC A
+XCH A,R6
+XCH A,R5
+RLC A
+XCH A,R5
+DJNZ R4,ShiftOut //moved 24BIT?
+SETB ADSK
+NOP
+CLR ADSK
+RET
+.wrap
+
+% c-sdk {
+// For optimal use of DMA bandwidth we would use an autopull threshold of 32,
+// but we are using a threshold of 8 here (consume 1 byte from each FIFO entry
+// and discard the remainder) to make things easier for software on the other side
+
+static inline void st7789_lcd_program_init(PIO pio, uint sm, uint offset, uint data_pin, uint clk_pin, float clk_div) {
+    pio_gpio_init(pio, data_pin);
+    pio_gpio_init(pio, clk_pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, data_pin, 1, true);
+    pio_sm_set_consecutive_pindirs(pio, sm, clk_pin, 1, true);
+    pio_sm_config c = st7789_lcd_program_get_default_config(offset);
+    sm_config_set_sideset_pins(&c, clk_pin);
+    sm_config_set_out_pins(&c, data_pin, 1);
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
+    sm_config_set_clkdiv(&c, clk_div);
+    sm_config_set_out_shift(&c, false, true, 8);
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+
+// Making use of the narrow store replication behaviour on RP2040 to get the
+// data left-justified (as we are using shift-to-left to get MSB-first serial)
+
+static inline void st7789_lcd_put(PIO pio, uint sm, uint8_t x) {
+    while (pio_sm_is_tx_fifo_full(pio, sm))
+        ;
+    *(volatile uint8_t*)&pio->txf[sm] = x;
+}
+
+// SM is done when it stalls on an empty FIFO
+
+static inline void st7789_lcd_wait_idle(PIO pio, uint sm) {
+    uint32_t sm_stall_mask = 1u << (sm + PIO_FDEBUG_TXSTALL_LSB);
+    pio->fdebug = sm_stall_mask;
+    while (!(pio->fdebug & sm_stall_mask))
+        ;
+}
+%}
+
+PUBLIC ReadAD
+HX711ROM segment code
+rseg HX711ROM
+sbit ADDO = P1.5;
+sbit ADSK = P0.0;
+
+; Out: R4, R5, R6, R7, R6=>LSB
+
+ReadAD:
+CLR ADSK //AD Enable（PD_SCK set low）
+SETB ADDO //Enable 51CPU I/0
+JB ADDO,$ //AD conversion completed?
+MOV R4,#24
+ShiftOut:
+SETB ADSK //PD_SCK set high（positive pulse）
+NOP
+CLR ADSK //PD_SCK set low
+MOV C,ADDO //read on bit
+XCH A,R7 //move data
+RLC A
+XCH A,R7
+XCH A,R6
+RLC A
+XCH A,R6
+XCH A,R5
+RLC A
+XCH A,R5
+DJNZ R4,ShiftOut //moved 24BIT?
+SETB ADSK
+NOP
+CLR ADSK
+RET
+END

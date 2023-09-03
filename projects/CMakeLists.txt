@@ -1,4 +1,5 @@
 add_subdirectory(blink)
+add_subdirectory(rocketbenchy)
 
 add_subdirectory(rcj2023)
 

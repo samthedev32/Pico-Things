@@ -1,15 +1,16 @@
+#include "boards/pico.h"
 #include "pico/stdlib.h"
 
 int main() {
-  gpio_init(2);
-  gpio_set_dir(2, GPIO_OUT);
+  gpio_init(PICO_DEFAULT_LED_PIN);
 
-  gpio_init(3);
-  gpio_set_dir(3, GPIO_OUT);
+  gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
 
   while (true) {
-    gpio_put(2, 0);
-    gpio_put(3, 1);
-    sleep_ms(1000);
+
+    gpio_put(PICO_DEFAULT_LED_PIN, 1);
+    sleep_ms(500);
+    gpio_put(PICO_DEFAULT_LED_PIN, 0);
+    sleep_ms(500);
   }
 }
