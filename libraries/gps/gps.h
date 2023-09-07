@@ -7,18 +7,23 @@
 #include "hardware/uart.h"
 #include "pico/stdlib.h"
 
-#include "mathutil.h"
+// Convert Char to HEX
+char char_to_hex(char Character) {
+  char HexTable[] = "0123456789ABCDEF";
 
-typedef struct GPS {
-  // long SecondsInDay;           //< Time in seconds since midnight.  Used for
+  return HexTable[(unsigned int)Character];
+}
+
+typedef struct {
+  // long SecondsInDay;           //< Time in second since midnight.  Used for
   // APRS timing, and LoRa timing in TDM mode
-  int hours, minutes, seconds; //< UTC Time
-  float longitude, latitude;   //< gps Coordinates
-  long altitude;               //< gps Altitude
-  unsigned int satellites;     //< Number of Satellites Connected
-  int speed;                   //< gps Speed
-  int direction;               //< gps Course Direction
-} GPS;
+  int hour, minute, second;  //< UTC Time
+  float longitude, latitude; //< gps Coordinates
+  long altitude;             //< gps Altitude
+  unsigned int satellites;   //< Number of Satellites Connected
+  int speed;                 //< gps Speed
+  int direction;             //< gps Course Direction
+} gps_t;
 
 int GPSChecksumOK(char *Buffer, int Count) {
   unsigned char XOR, i, c;
@@ -86,7 +91,7 @@ float FixPosition(float Position) {
   return Minutes + Seconds * 5 / 3;
 }
 
-void ProcessLine(GPS *gps, char *Buffer, int Count) {
+void ProcessLine(gps_t *gps, char *Buffer, int Count) {
   float utc_time, latitude, longitude, hdop, altitude, speed, course;
   int lock, satellites, date;
   char active, ns, ew, units, speedstring[16], coursestring[16];
@@ -102,12 +107,12 @@ void ProcessLine(GPS *gps, char *Buffer, int Count) {
         // $GPGGA,124943.00,5157.01557,N,00232.66381,W,1,09,1.01,149.3,M,48.6,M,,*42
 
         // Get UTC Time
-        gps->hours = (long)utc_time / 10000;
-        gps->minutes = ((long)utc_time / 100) % 100;
-        gps->seconds = (long)utc_time % 100;
+        gps->hour = (long)utc_time / 10000;
+        gps->minute = ((long)utc_time / 100) % 100;
+        gps->second = (long)utc_time % 100;
 
-        // gps->SecondsInDay = gps->hours * 3600 + gps->minutes * 60 +
-        // gps->seconds;
+        // gps->SecondsInDay = gps->hour * 3600 + gps->minute * 60 +
+        // gps->second;
 
         if (satellites >= 4) {
           // Get Latitude
@@ -179,7 +184,7 @@ void setup_gps(void) {
   gpio_set_function(5, GPIO_FUNC_UART);
 }
 
-void gps_update(GPS *gps) {
+void gps_update(gps_t *gps) {
   static char Line[100];
   static int Length = 0;
 

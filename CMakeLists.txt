@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # Pull in SDK (must be before project)
 include(pico_sdk_import.cmake)
 
+# TODO: remove CXX
 project(pico_things C CXX ASM)
 
 if(PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
@@ -21,7 +22,9 @@ add_compile_options(-Wall
     -Wno-maybe-uninitialized
 )
 
-# Sources Here
+# Sources
+add_subdirectory(external)
+
 add_subdirectory(libraries)
 add_subdirectory(examples)
 add_subdirectory(projects)

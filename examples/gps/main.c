@@ -6,7 +6,7 @@
 int main() {
   stdio_init_all();
 
-  GPS gps;
+  gps_t gps;
   setup_gps();
 
   while (true) {

@@ -3,6 +3,8 @@
 #include "mathutil.h"
 #include "pico/stdlib.h"
 
+#include <string.h>
+
 typedef struct slcd {
   int pin[11];
   int rs, rw, e;

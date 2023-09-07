@@ -51,10 +51,3 @@ uint16_t rgb_to_hex(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) |
          ((b & 0b11111000) >> 3);
 }
-
-// Convert Char to HEX
-char char_to_hex(char Character) {
-  char HexTable[] = "0123456789ABCDEF";
-
-  return HexTable[(unsigned int)Character];
-}
