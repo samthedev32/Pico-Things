@@ -1,4 +1,4 @@
-add_library(pico_gps old.h)
+add_library(pico_gps gps.h)
 
 target_link_libraries(pico_gps pico_stdlib pico_mathutil hardware_gpio hardware_uart)
 

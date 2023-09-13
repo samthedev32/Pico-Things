@@ -1,4 +1,5 @@
 add_subdirectory(blink)
+add_subdirectory(adc)
 add_subdirectory(rocketbenchy)
 add_subdirectory(alarm)
 
