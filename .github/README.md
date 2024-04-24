@@ -1,8 +1,7 @@
 # Pico-Things
 My codes for the Raspberry Pi Pico (rp2040 mcu)
 > [!NOTE]
-> I am planning a full rewrite of this whole repo to make it more up to date & better
-> It is planned for mid-summer this year
+> A full rewrite of this whole repo & additional stuff is in progress & comes at around mid-summer
 
 # Setup
 
