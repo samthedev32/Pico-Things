@@ -1,6 +1,6 @@
 # Pico-Things
 My codes for the Raspberry Pi Pico (rp2040 mcu)
->[!WARNING] I am planning a full rewrite of this whole repo to make it more up to date & better
+>![WARNING] I am planning a full rewrite of this whole repo to make it more up to date & better
 
 # Setup
 
