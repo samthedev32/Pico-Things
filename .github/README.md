@@ -1,14 +1,3 @@
-# Pico-Things
-My codes for the Raspberry Pi Pico (rp2040 mcu)
 > [!NOTE]
-> This repo will get renewed, but I am not planning to add libraries anymore. \
-> Another batch of updates may come when the new Pi chip comes out
-
-# Setup
-
-## Linux (Debian Based)
-
-1. Install the Toolchain
-```bash
-sudo apt update && sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential -y
-```
+> I've started many things I haven't finished, and I've stopped using the rp2040 since, so it is very unlikely that there'll be any future for this collection of libraries.
+> Hence, this repo is now archived. (I may reconsider reviving it in case a new RPi chip drops that truly catches my eyes)
